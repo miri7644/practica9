@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Maquillaje</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1c1caf;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            margin: 30px auto;
+            background-color: rgb(143, 201, 36);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px 0;
+            width: 100%;
+            border: 1px solid rgb(134, 14, 14);
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: rgb(30, 172, 207);
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .product-list {
+            margin-top: 20px;
+        }
+        .product-item {
+            background-color: #33b40c;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .product-item button {
+            background-color: #f44336;
+        }
+        .product-item button:hover {
+            background-color: #e53935;
+        }
+        .edit-button {
+            background-color: #ff9800;
+        }
+        .edit-button:hover {
+            background-color: #fb8c00;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Gestión de Productos de Maquillaje</h1>
+
+        <input type="text" id="productName" placeholder="Nombre del producto" />
+        <input type="text" id="productPrice" placeholder="Precio del producto" />
+        <button onclick="addProduct()">Agregar Producto</button>
+
+        <div class="product-list" id="productList">
+            <!-- Aquí se mostrarán los productos -->
+        </div>
+
+        <button onclick="goBack()">Regresar</button>
+    </div>
+
+    <script>
+        let products = [];
+
+        // Función para agregar un producto
+        function addProduct() {
+            const name = document.getElementById('productName').value;
+            const price = document.getElementById('productPrice').value;
+
+            if (name && price) {
+                const newProduct = {
+                    id: products.length + 1,
+                    name: name,
+                    price: price
+                };
+                products.push(newProduct);
+                displayProducts();
+                document.getElementById('productName').value = '';
+                document.getElementById('productPrice').value = '';
+            } else {
+                alert('Por favor, ingresa todos los campos.');
+            }
+        }
+
+        // Función para mostrar los productos
+        function displayProducts() {
+            const productList = document.getElementById('productList');
+            productList.innerHTML = '';
+
+            products.forEach(product => {
+                const productItem = document.createElement('div');
+                productItem.classList.add('product-item');
+                productItem.innerHTML = `
+                    <span>${product.name} - $${product.price}</span>
+                    <button class="edit-button" onclick="editProduct(${product.id})">Editar</button>
+                    <button onclick="deleteProduct(${product.id})">Borrar</button>
+                `;
+                productList.appendChild(productItem);
+            });
+        }
+
+        // Función para editar un producto
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productPrice').value = product.price;
+
+                // Eliminar el producto original y actualizarlo
+                deleteProduct(id);
+            }
+        }
+
+        // Función para borrar un producto
+        function deleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            displayProducts();
+        }
+
+        // Función para regresar (en este caso, reiniciar el formulario)
+        function goBack() {
+            document.getElementById('productName').value = '';
+            document.getElementById('productPrice').value = '';
+            displayProducts();
+        }
+    </script>
+
+</body>
+</html>
